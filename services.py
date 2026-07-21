@@ -39,6 +39,12 @@ def extract_and_convert_audio(url: str, task_id: str) -> tuple[str, str]:
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
+        # ASTUCE ANTI-BOT : Forcer yt-dlp à se faire passer pour un téléphone Android
+        'extractor_args': {
+            'youtube': {
+                'client': ['android', 'ios', 'tv', 'web']
+            }
+        },
         'quiet': True,
         'no_warnings': True,
         'match_filter': duration_filter,
@@ -55,10 +61,11 @@ def extract_and_convert_audio(url: str, task_id: str) -> tuple[str, str]:
         error_msg = str(e)
         if "limite de sécurité" in error_msg:
             raise HTTPException(status_code=400, detail="La vidéo dépasse la durée maximale autorisée (20 minutes).")
-        raise HTTPException(status_code=400, detail="Impossible de télécharger la vidéo (URL invalide, privée ou non supportée)")
+        # On affiche l'erreur exacte pour le debug
+        raise HTTPException(status_code=400, detail=f"Erreur yt-dlp: {error_msg}")
     except Exception as e:
         print(f"Erreur inattendue: {e}")
-        raise HTTPException(status_code=500, detail="Erreur interne lors de la conversion")
+        raise HTTPException(status_code=500, detail=f"Erreur interne: {str(e)}")
 
     file_path = f"{output_filename}.mp3"
     
