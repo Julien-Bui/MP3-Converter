@@ -1,5 +1,6 @@
 import uuid
 import asyncio
+import os
 from urllib.parse import quote, urlparse
 from fastapi import FastAPI, BackgroundTasks, HTTPException, Request
 from fastapi.responses import HTMLResponse, FileResponse
@@ -41,7 +42,7 @@ async def index():
 
 @app.post("/api/convert")
 @limiter.limit("5/minute")
-async def convert_video(payload: ConvertRequest, request: Request, background_tasks: BackgroundTasks):
+async def convert_video(payload: ConvertRequest, request: Request):
     """Route API pour convertir une vidéo YouTube en MP3."""
     url = payload.url
     
@@ -56,8 +57,7 @@ async def convert_video(payload: ConvertRequest, request: Request, background_ta
     async with conversion_semaphore:
         task_id = uuid.uuid4().hex
         
-        # 3. Exécution asynchrone: On lance yt-dlp dans un thread séparé
-        # pour ne pas bloquer les autres utilisateurs pendant le téléchargement
+        # Exécution asynchrone pour ne pas bloquer les autres utilisateurs
         loop = asyncio.get_running_loop()
         try:
             file_path, final_filename = await loop.run_in_executor(
@@ -69,14 +69,26 @@ async def convert_video(payload: ConvertRequest, request: Request, background_ta
             print(f"Erreur d'exécution: {e}")
             raise HTTPException(status_code=500, detail="Erreur interne lors de la conversion")
 
-    # Ajout de la tâche de fond pour supprimer le fichier
+    # On retourne un lien pour le téléchargement natif au lieu d'envoyer le fichier directement
+    return {"file_id": task_id, "filename": final_filename}
+
+@app.get("/api/download/{file_id}")
+async def download_file(file_id: str, name: str, background_tasks: BackgroundTasks):
+    """Route pour télécharger le fichier et le supprimer ensuite de façon sûre."""
+    if not file_id.isalnum():
+        raise HTTPException(status_code=400, detail="ID invalide")
+    
+    file_path = f"tmp_{file_id}.mp3"
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="Fichier introuvable ou déjà téléchargé")
+        
+    # Le fichier sera supprimé après que le téléchargement soit terminé
     background_tasks.add_task(remove_file, file_path)
     
-    encoded_filename = quote(final_filename)
-
+    encoded_filename = quote(name)
     return FileResponse(
         path=file_path,
-        filename=final_filename,
+        filename=name,
         media_type='audio/mpeg',
         headers={"Content-Disposition": f'attachment; filename="{encoded_filename}"'}
     )

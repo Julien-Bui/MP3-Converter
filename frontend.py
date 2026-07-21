@@ -97,20 +97,13 @@ def get_frontend_html() -> str:
                     }});
                     
                     if (res.ok) {{
-                        const blob = await res.blob();
-                        const a = document.createElement('a');
-                        a.href = window.URL.createObjectURL(blob);
-                        let filename = 'audio.mp3';
-                        const disposition = res.headers.get('Content-Disposition');
-                        if (disposition && disposition.includes('filename="')) {{
-                            filename = decodeURIComponent(disposition.split('filename="')[1].split('"')[0]);
-                        }}
-                        a.download = filename;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
+                        const data = await res.json();
                         
-                        status.innerHTML = "<span class='success'>Téléchargement terminé !</span>";
+                        // Déclenche un vrai téléchargement via le navigateur
+                        const downloadUrl = `/api/download/${{data.file_id}}?name=${{encodeURIComponent(data.filename)}}`;
+                        window.location.href = downloadUrl;
+                        
+                        status.innerHTML = "<span class='success'>Téléchargement en cours !</span>";
                         document.getElementById('url').value = '';
                     }} else {{
                         const data = await res.json();
