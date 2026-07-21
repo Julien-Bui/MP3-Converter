@@ -1,10 +1,9 @@
 import uuid
 from urllib.parse import quote, urlparse
-from fastapi import FastAPI, BackgroundTasks, HTTPException, Header, Depends
+from fastapi import FastAPI, BackgroundTasks, HTTPException
 from fastapi.responses import HTMLResponse, FileResponse
 from pydantic import BaseModel
 
-from config import API_KEY
 from services import extract_and_convert_audio, remove_file
 from frontend import get_frontend_html
 
@@ -12,12 +11,6 @@ app = FastAPI(title="YouTube to MP3 Converter")
 
 class ConvertRequest(BaseModel):
     url: str
-
-def verify_api_key(x_api_key: str = Header(None)):
-    """Vérifie la présence et la validité de la clé API si elle est configurée."""
-    if API_KEY and x_api_key != API_KEY:
-        raise HTTPException(status_code=401, detail="Clé API invalide ou manquante")
-    return x_api_key
 
 def is_valid_youtube_url(url: str) -> bool:
     """Vérifie que l'URL appartient bien à YouTube pour éviter le SSRF (Server-Side Request Forgery)."""
@@ -35,7 +28,7 @@ async def index():
     return get_frontend_html()
 
 @app.post("/api/convert")
-async def convert_video(request: ConvertRequest, background_tasks: BackgroundTasks, x_api_key: str = Depends(verify_api_key)):
+async def convert_video(request: ConvertRequest, background_tasks: BackgroundTasks):
     """Route API pour convertir une vidéo YouTube en MP3."""
     url = request.url
     

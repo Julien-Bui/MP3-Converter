@@ -1,5 +1,3 @@
-from config import API_KEY
-
 def get_frontend_html() -> str:
     """Génère et retourne le code HTML/CSS/JS d'une interface simpliste."""
     return f"""
@@ -33,10 +31,10 @@ def get_frontend_html() -> str:
                 margin-top: 0;
                 color: #333;
             }}
-            input[type="text"], input[type="password"] {{
+            input[type="text"] {{
                 width: 100%;
                 padding: 12px;
-                margin: 10px 0;
+                margin: 15px 0;
                 border: 1px solid #ccc;
                 border-radius: 4px;
                 box-sizing: border-box;
@@ -74,14 +72,12 @@ def get_frontend_html() -> str:
         <div class="card">
             <h2>YouTube vers MP3</h2>
             <input type="text" id="url" placeholder="Lien YouTube (ex: https://youtu.be/...)" required />
-            <input type="password" id="apiKey" placeholder="Clé API (Optionnelle)" {"" if API_KEY else "style='display:none;'"} />
             <button id="btn" onclick="convert()">Télécharger MP3</button>
             <div id="status"></div>
         </div>
         <script>
             async function convert() {{
                 const url = document.getElementById('url').value.trim();
-                const apiKey = document.getElementById('apiKey').value.trim();
                 const btn = document.getElementById('btn');
                 const status = document.getElementById('status');
                 
@@ -94,12 +90,9 @@ def get_frontend_html() -> str:
                 status.innerHTML = "Téléchargement et conversion en cours...";
                 
                 try {{
-                    const headers = {{ 'Content-Type': 'application/json' }};
-                    if (apiKey) headers['x-api-key'] = apiKey;
-                    
                     const res = await fetch('/api/convert', {{
                         method: 'POST',
-                        headers: headers,
+                        headers: {{ 'Content-Type': 'application/json' }},
                         body: JSON.stringify({{ url: url }})
                     }});
                     
