@@ -41,9 +41,9 @@ async def index():
 
 @app.post("/api/convert")
 @limiter.limit("5/minute")
-async def convert_video(request: ConvertRequest, fastapi_request: Request, background_tasks: BackgroundTasks):
+async def convert_video(payload: ConvertRequest, request: Request, background_tasks: BackgroundTasks):
     """Route API pour convertir une vidéo YouTube en MP3."""
-    url = request.url
+    url = payload.url
     
     # Validation de l'URL
     if not is_valid_youtube_url(url):
