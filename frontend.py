@@ -15,35 +15,42 @@ def get_frontend_html() -> str:
                 align-items: center;
                 justify-content: center;
                 height: 100vh;
-                background-color: #f4f4f9;
+                background-color: #0f172a;
+                color: #f8fafc;
                 margin: 0;
             }}
             .card {{
-                background: white;
+                background-color: #1e293b;
                 padding: 2rem;
                 border-radius: 8px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
                 text-align: center;
                 width: 90%;
                 max-width: 400px;
             }}
             h2 {{
                 margin-top: 0;
-                color: #333;
+                color: #f8fafc;
             }}
             input[type="text"] {{
                 width: 100%;
                 padding: 12px;
                 margin: 15px 0;
-                border: 1px solid #ccc;
+                border: 1px solid #334155;
+                background-color: #0f172a;
+                color: white;
                 border-radius: 4px;
                 box-sizing: border-box;
                 font-size: 16px;
             }}
+            input[type="text"]:focus {{
+                outline: none;
+                border-color: #ef4444;
+            }}
             button {{
                 width: 100%;
                 padding: 12px;
-                background-color: #ff0000;
+                background-color: #ef4444;
                 color: white;
                 border: none;
                 border-radius: 4px;
@@ -53,19 +60,20 @@ def get_frontend_html() -> str:
                 transition: background-color 0.3s;
             }}
             button:hover {{
-                background-color: #cc0000;
+                background-color: #dc2626;
             }}
             button:disabled {{
-                background-color: #ccc;
+                background-color: #475569;
                 cursor: not-allowed;
+                color: #94a3b8;
             }}
             #status {{
                 margin-top: 15px;
                 font-size: 14px;
                 min-height: 20px;
             }}
-            .error {{ color: red; }}
-            .success {{ color: green; }}
+            .error {{ color: #ef4444; }}
+            .success {{ color: #10b981; }}
         </style>
     </head>
     <body>
