@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.pyc
+.git/
+.gitignore
+.env
+.env.*
+.agents/
+.pytest_cache/
+README.md
+Dockerfile
+.dockerignore
+tmp_*.mp3
