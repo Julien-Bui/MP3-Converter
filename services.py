@@ -1,6 +1,12 @@
 import os
+import logging
 import yt_dlp
 from fastapi import HTTPException
+
+logger = logging.getLogger(__name__)
+
+# Signal interne injecté dans le message yt-dlp pour identifier un refus dû à la durée.
+_DURATION_REJECT_SIGNAL = "MP3CONVERTER_DURATION_EXCEEDED"
 
 def remove_file(path: str):
     """Supprime un fichier s'il existe (utilisé en tâche de fond)."""
@@ -8,7 +14,7 @@ def remove_file(path: str):
         if os.path.exists(path):
             os.remove(path)
     except Exception as e:
-        print(f"Erreur lors de la suppression de {path}: {e}")
+        logger.warning("Erreur lors de la suppression de %s: %s", path, e)
 
 def sanitize_filename(video_title: str, fallback_name: str) -> str:
     """Nettoie le titre pour générer un nom de fichier valide."""
@@ -21,7 +27,7 @@ def duration_filter(info, *, incomplete):
     """Filtre de sécurité : refuse les vidéos de plus de 20 minutes."""
     duration = info.get('duration')
     if duration and duration > 1200:  # 20 minutes = 1200 secondes
-        return 'La vidéo est trop longue (limite de sécurité: 20 minutes).'
+        return _DURATION_REJECT_SIGNAL
     return None
 
 def extract_and_convert_audio(url: str, task_id: str) -> tuple[str, str]:
@@ -59,13 +65,14 @@ def extract_and_convert_audio(url: str, task_id: str) -> tuple[str, str]:
             
     except yt_dlp.utils.DownloadError as e:
         error_msg = str(e)
-        if "limite de sécurité" in error_msg:
+        if _DURATION_REJECT_SIGNAL in error_msg:
             raise HTTPException(status_code=400, detail="La vidéo dépasse la durée maximale autorisée (20 minutes).")
-        # On affiche l'erreur exacte pour le debug
+        # On affiche l'erreur yt-dlp (utile à l'utilisateur : vidéo privée, indisponible, etc.)
+        logger.warning("Échec yt-dlp: %s", error_msg)
         raise HTTPException(status_code=400, detail=f"Erreur yt-dlp: {error_msg}")
     except Exception as e:
-        print(f"Erreur inattendue: {e}")
-        raise HTTPException(status_code=500, detail=f"Erreur interne: {str(e)}")
+        logger.exception("Erreur inattendue pendant la conversion")
+        raise HTTPException(status_code=500, detail="Erreur interne lors de la conversion.")
 
     file_path = f"{output_filename}.mp3"
     
