@@ -265,7 +265,10 @@ def get_frontend_html() -> str:
                         document.getElementById('url').value = '';
                     }} else {{
                         const data = await res.json();
-                        status.innerHTML = `<span class='error'>${{data.detail || "Une erreur est survenue"}}</span>`;
+                        status.replaceChildren(Object.assign(document.createElement('span'), {{
+                            className: 'error',
+                            textContent: data.detail || "Une erreur est survenue"
+                        }}));
                     }}
                 }} catch (e) {{
                     status.innerHTML = "<span class='error'>Erreur de connexion au serveur.</span>";
