@@ -39,3 +39,8 @@ Ouvrez votre navigateur sur `http://localhost:8000`.
 Ce projet est conçu pour être déployé sur [Railway.app](https://railway.app/).
 1. Connectez Railway à votre dépôt GitHub.
 2. L'application détectera automatiquement le `Dockerfile` et se lancera !
+
+## Licence
+
+Distribué sous la licence [MIT](LICENSE). Voir `LICENSE` pour plus d'informations.
+
