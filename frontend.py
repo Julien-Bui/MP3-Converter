@@ -1,6 +1,6 @@
 def get_frontend_html() -> str:
     """Génère et retourne le code HTML/CSS/JS d'une interface premium Vercel/Linear-like."""
-    return f"""
+    return """
     <!DOCTYPE html>
     <html lang="fr">
     <head>
@@ -20,7 +20,7 @@ def get_frontend_html() -> str:
         <script src="https://unpkg.com/lucide@latest"></script>
 
         <style>
-            :root {{
+            :root {
                 --bg-body: #0A0A0A;
                 --bg-card: #141414;
                 --border-card: rgba(255, 255, 255, 0.05);
@@ -28,16 +28,16 @@ def get_frontend_html() -> str:
                 --text-muted: rgba(255, 255, 255, 0.3);
                 --red-500: #ef4444;
                 --red-600: #dc2626;
-            }}
+            }
 
-            * {{
+            * {
                 box-sizing: border-box;
                 margin: 0;
                 padding: 0;
                 font-family: 'Inter', sans-serif;
-            }}
+            }
 
-            body {{
+            body {
                 background-color: var(--bg-body);
                 color: var(--text-primary);
                 min-height: 100vh;
@@ -48,10 +48,10 @@ def get_frontend_html() -> str:
                 overflow: hidden;
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
-            }}
+            }
 
             /* Ambiance: Grand cercle rouge flouté en fond */
-            .ambient-glow {{
+            .ambient-glow {
                 position: absolute;
                 top: 50%;
                 left: 50%;
@@ -62,10 +62,10 @@ def get_frontend_html() -> str:
                 filter: blur(80px);
                 z-index: 0;
                 pointer-events: none;
-            }}
+            }
 
             /* Carte Centrale (#141414 avec fine bordure) */
-            .card {{
+            .card {
                 background-color: var(--bg-card);
                 border: 1px solid var(--border-card);
                 border-radius: 20px;
@@ -78,10 +78,10 @@ def get_frontend_html() -> str:
                 display: flex;
                 flex-direction: column;
                 gap: 32px;
-            }}
+            }
 
             /* Titre Space Grotesk ultra serré */
-            h1 {{
+            h1 {
                 font-family: 'Space Grotesk', sans-serif;
                 font-size: 2.75rem;
                 font-weight: 700;
@@ -89,38 +89,38 @@ def get_frontend_html() -> str:
                 text-align: center;
                 color: #ffffff;
                 line-height: 1.1;
-            }}
+            }
 
             /* Search Bar (Fused layout) */
-            .search-bar {{
+            .search-bar {
                 display: flex;
                 background: #0A0A0A;
                 border: 1px solid var(--border-card);
                 border-radius: 9999px; /* Pilule parfaite */
                 padding: 4px;
                 transition: border-color 0.2s, box-shadow 0.2s;
-            }}
+            }
             
-            .search-bar:focus-within {{
+            .search-bar:focus-within {
                 border-color: rgba(255, 255, 255, 0.2);
                 box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
-            }}
+            }
 
-            .input-wrapper {{
+            .input-wrapper {
                 flex-grow: 1;
                 display: flex;
                 align-items: center;
                 padding-left: 16px;
-            }}
+            }
             
-            .input-wrapper i {{
+            .input-wrapper i {
                 color: rgba(255, 255, 255, 0.4);
                 width: 18px;
                 height: 18px;
                 margin-right: 12px;
-            }}
+            }
 
-            input[type="text"] {{
+            input[type="text"] {
                 width: 100%;
                 background: transparent;
                 border: none;
@@ -128,14 +128,14 @@ def get_frontend_html() -> str:
                 font-size: 0.95rem;
                 outline: none;
                 font-family: inherit;
-            }}
+            }
 
-            input[type="text"]::placeholder {{
+            input[type="text"]::placeholder {
                 color: rgba(255, 255, 255, 0.3);
-            }}
+            }
 
             /* Bouton "Edge-cutting" */
-            button.convert-btn {{
+            button.convert-btn {
                 background: linear-gradient(180deg, var(--red-500) 0%, var(--red-600) 100%);
                 box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 8px 16px -4px rgba(239, 68, 68, 0.3);
                 color: white;
@@ -150,56 +150,56 @@ def get_frontend_html() -> str:
                 align-items: center;
                 gap: 8px;
                 white-space: nowrap;
-            }}
+            }
 
-            button.convert-btn:hover {{
+            button.convert-btn:hover {
                 box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 12px 24px -4px rgba(239, 68, 68, 0.4);
                 transform: translateY(-1px);
-            }}
+            }
             
-            button.convert-btn:active {{
+            button.convert-btn:active {
                 transform: translateY(0);
                 box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-            }}
+            }
             
-            button.convert-btn:disabled {{
+            button.convert-btn:disabled {
                 background: #27272a;
                 color: #52525b;
                 box-shadow: none;
                 cursor: not-allowed;
                 transform: none;
-            }}
+            }
 
-            #status {{
+            #status {
                 text-align: center;
                 font-size: 0.85rem;
                 min-height: 20px;
                 font-weight: 500;
-            }}
-            .error {{ color: var(--red-500); }}
-            .success {{ color: #10b981; }}
+            }
+            .error { color: var(--red-500); }
+            .success { color: #10b981; }
 
             /* Ligne de features minimaliste */
-            .features-line {{
+            .features-line {
                 text-align: center;
                 color: var(--text-muted);
                 font-size: 0.75rem;
                 font-weight: 500;
                 letter-spacing: 0.02em;
                 margin-top: 8px;
-            }}
+            }
 
             /* Animations utiles */
-            .lucide-spin {{
+            .lucide-spin {
                 animation: spin 1s linear infinite;
-            }}
-            @keyframes spin {{
-                from {{ transform: rotate(0deg); }}
-                to {{ transform: rotate(360deg); }}
-            }}
+            }
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
             
             /* GitHub button */
-            .github-btn {{
+            .github-btn {
                 position: absolute;
                 top: 24px;
                 right: 24px;
@@ -217,38 +217,38 @@ def get_frontend_html() -> str:
                 transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
                 z-index: 10;
                 backdrop-filter: blur(12px);
-            }}
+            }
 
-            .github-btn:hover {{
+            .github-btn:hover {
                 background: rgba(255, 255, 255, 0.08);
                 color: #ffffff;
                 border-color: rgba(255, 255, 255, 0.15);
                 transform: translateY(-1px);
-            }}
+            }
 
-            .github-btn:active {{
+            .github-btn:active {
                 transform: translateY(0);
-            }}
+            }
 
-            .github-btn:focus-visible {{
+            .github-btn:focus-visible {
                 outline: none;
                 box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
-            }}
+            }
 
-            .github-btn svg {{
+            .github-btn svg {
                 width: 16px;
                 height: 16px;
                 flex-shrink: 0;
-            }}
+            }
 
             /* Responsive */
-            @media (max-width: 480px) {{
-                .github-btn {{ top: 16px; right: 16px; font-size: 0.8rem; padding: 6px 12px; }}
-                .card {{ padding: 32px 24px; }}
-                h1 {{ font-size: 2.25rem; }}
-                .search-bar {{ padding: 4px; padding-right: 4px; }}
-                button.convert-btn {{ padding: 10px 16px; font-size: 0.85rem; }}
-            }}
+            @media (max-width: 480px) {
+                .github-btn { top: 16px; right: 16px; font-size: 0.8rem; padding: 6px 12px; }
+                .card { padding: 32px 24px; }
+                h1 { font-size: 2.25rem; }
+                .search-bar { padding: 4px; padding-right: 4px; }
+                button.convert-btn { padding: 10px 16px; font-size: 0.85rem; }
+            }
         </style>
     </head>
     <body>
@@ -285,50 +285,50 @@ def get_frontend_html() -> str:
         <script>
             lucide.createIcons();
 
-            async function convert() {{
+            async function convert() {
                 const url = document.getElementById('url').value.trim();
                 const btn = document.getElementById('btn');
                 const status = document.getElementById('status');
                 
-                if (!url) {{ 
+                if (!url) { 
                     status.innerHTML = "<span class='error'>Veuillez entrer un lien valide.</span>"; 
                     return; 
-                }}
+                }
                 
                 btn.disabled = true;
                 btn.innerHTML = '<i data-lucide="loader-2" class="lucide-spin"></i> Traitement...';
                 lucide.createIcons();
                 status.innerHTML = "Conversion en cours...";
                 
-                try {{
-                    const res = await fetch('/api/convert', {{
+                try {
+                    const res = await fetch('/api/convert', {
                         method: 'POST',
-                        headers: {{ 'Content-Type': 'application/json' }},
-                        body: JSON.stringify({{ url: url }})
-                    }});
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url: url })
+                    });
                     
-                    if (res.ok) {{
+                    if (res.ok) {
                         const data = await res.json();
-                        const downloadUrl = `/api/download/${{data.file_id}}?name=${{encodeURIComponent(data.filename)}}`;
+                        const downloadUrl = `/api/download/${data.file_id}?name=${encodeURIComponent(data.filename)}`;
                         window.location.href = downloadUrl;
                         
                         status.innerHTML = "<span class='success'>Téléchargement démarré !</span>";
                         document.getElementById('url').value = '';
-                    }} else {{
+                    } else {
                         const data = await res.json();
-                        status.replaceChildren(Object.assign(document.createElement('span'), {{
+                        status.replaceChildren(Object.assign(document.createElement('span'), {
                             className: 'error',
                             textContent: data.detail || "Une erreur est survenue"
-                        }}));
-                    }}
-                }} catch (e) {{
+                        }));
+                    }
+                } catch (e) {
                     status.innerHTML = "<span class='error'>Erreur de connexion au serveur.</span>";
-                }} finally {{
+                } finally {
                     btn.disabled = false;
                     btn.innerHTML = '<i data-lucide="arrow-right"></i> Télécharger';
                     lucide.createIcons();
-                }}
-            }}
+                }
+            }
         </script>
     </body>
     </html>
