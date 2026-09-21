@@ -45,12 +45,8 @@ def extract_and_convert_audio(url: str, task_id: str) -> tuple[str, str]:
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
-        # ASTUCE ANTI-BOT : Forcer yt-dlp à se faire passer pour un téléphone Android
-        'extractor_args': {
-            'youtube': {
-                'client': ['android', 'ios', 'tv', 'web']
-            }
-        },
+        # Les clients par défaut de yt-dlp gèrent seuls la rotation anti-403.
+        # Forcer 'android'/'ios' déclenche des 403 (PO token requis par YouTube).
         'quiet': True,
         'no_warnings': True,
         'match_filter': duration_filter,
