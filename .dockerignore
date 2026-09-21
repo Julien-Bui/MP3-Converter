@@ -1,13 +1,23 @@
+# Secrets et fichiers locaux : ne jamais les inclure dans l'image
+.env*
+cookies*.txt
+
+# Dépendances et artefacts locaux (l'image installe les siens)
 venv/
 __pycache__/
 *.pyc
+
+# Copie locale du générateur de PO tokens (recompilée par le Dockerfile)
+bgutil-ytdlp-pot-provider/
+
+# Fichiers temporaires de conversion
+tmp_*
+
+# Métadonnées git et fichiers inutiles dans l'image
 .git/
 .gitignore
-.env
-.env.*
-.agents/
+.agents*
 .pytest_cache/
 README.md
 Dockerfile
 .dockerignore
-tmp_*.mp3

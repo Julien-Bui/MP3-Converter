@@ -1,9 +1,23 @@
+# Étape 1 : construction du générateur de PO tokens (contournement anti-bot YouTube)
+# Version épinglée (tag 2.0.0) pour un build reproductible
+FROM node:22-bookworm-slim AS pot-builder
+ADD https://github.com/Brainicism/bgutil-ytdlp-pot-provider/archive/refs/tags/2.0.0.tar.gz /tmp/pot.tar.gz
+RUN tar -xzf /tmp/pot.tar.gz -C /opt && \
+    mv /opt/bgutil-ytdlp-pot-provider-2.0.0 /opt/bgutil && \
+    cd /opt/bgutil/server && npm ci --silent && npx tsc && \
+    rm -rf /tmp/pot.tar.gz
+
 FROM python:3.11-slim
 
-# Install ffmpeg
+# ffmpeg pour la conversion audio, libstdc++6 requis par le binaire node
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends ffmpeg && \
+    apt-get install -y --no-install-recommends ffmpeg libstdc++6 && \
     rm -rf /var/lib/apt/lists/*
+
+# Node.js (binaire officiel de l'image node) + générateur de PO tokens compilé
+COPY --from=node:22-bookworm-slim /usr/local/bin/node /usr/local/bin/node
+COPY --from=pot-builder /opt/bgutil/server /opt/bgutil/server
+ENV BGUTIL_SERVER_HOME=/opt/bgutil/server
 
 # Utilisateur non-root pour l'exécution
 RUN useradd -m -u 10001 appuser
